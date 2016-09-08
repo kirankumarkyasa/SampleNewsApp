@@ -28,8 +28,8 @@ public class CustomList extends RecyclerView.Adapter<CustomList.MyViewHolder> {
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            this.textViewName = (TextView) itemView.findViewById(R.id.count);
-            this.textViewVersion = (TextView) itemView.findViewById(R.id.title);
+            this.textViewName = (TextView) itemView.findViewById(R.id.title);
+            this.textViewVersion = (TextView) itemView.findViewById(R.id.count);
             this.imageViewIcon = (ImageView) itemView.findViewById(R.id.overflow);
         }
     }

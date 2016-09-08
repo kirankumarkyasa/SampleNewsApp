@@ -22,7 +22,8 @@
                 android:layout_height="160dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:layout_alignParentTop="true" />
 
             <TextView
                 android:id="@+id/title"
@@ -33,7 +34,8 @@
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
                 android:textColor="#4c4c4c"
-                android:textSize="15dp" />
+                android:textSize="15dp"
+                android:layout_toStartOf="@+id/overflow" />
 
             <TextView
                 android:id="@+id/count"
@@ -51,9 +53,9 @@
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/thumbnail"
-                android:layout_marginTop="10dp"
+                android:paddingBottom="5dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/capture" />
+                android:src="@drawable/share" />
 
         </RelativeLayout>
 
