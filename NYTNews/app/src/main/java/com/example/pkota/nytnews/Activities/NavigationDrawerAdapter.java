@@ -1,7 +1,7 @@
 package com.example.pkota.nytnews.Activities;
 
 /**
- * Created by Ravi on 29/07/15.
+ * Created by pkota on 13-09-2016.
  */
 
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pkota.nytnews.R;
@@ -45,6 +46,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     public void onBindViewHolder(MyViewHolder holder, int position) {
         NavDrawerItem current = data.get(position);
         holder.title.setText(current.getTitle());
+        holder.icon.setImageResource(current.getIcon());
     }
 
     @Override
@@ -54,10 +56,11 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView title;
-
+        ImageView icon;
         public MyViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
+            icon = (ImageView) itemView.findViewById(R.id.iconView);
         }
     }
 }
