@@ -4,6 +4,7 @@ package com.example.pkota.nytnews.Activities;
  * Created by pkota on 13-09-2016.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +14,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.example.pkota.nytnews.R;
 import com.example.pkota.nytnews.retrofit.NewsAPI;
 import com.example.pkota.nytnews.retrofit.NewsApiInterface;
 import com.example.pkota.nytnews.utils.News;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -75,8 +79,18 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
                 Log.d(TAG, "Number of news received: " + t.toString());
             }
         });
-    }
 
+        recyclerView.addOnItemTouchListener(
+                new CustomList(getApplicationContext(), new CustomList.OnItemClickListener() {
+                    @Override public void onItemClick(View view,List<News> news ,int position) {
+                        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+                        intent.putExtra("url", news.get(position).getUrl());
+                        startActivity(intent);
+                    }
+
+                })
+        );
+    }
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
