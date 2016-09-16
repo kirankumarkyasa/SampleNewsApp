@@ -36,7 +36,6 @@ public class FragmentDrawer extends Fragment {
     private View containerView;
     private static String[] titles = null;
     private static TypedArray icons = null;
-
     private FragmentDrawerListener drawerListener;
 
     public FragmentDrawer() {

@@ -1,5 +1,8 @@
 package com.example.pkota.nytnews.Activities;
 
+/**
+ * Created by pkota on 14-09-2016.
+ */
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;

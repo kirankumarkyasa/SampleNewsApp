@@ -10,6 +10,7 @@
         android:paddingBottom="10dp"
         android:src="@drawable/news_icon"
         android:id="@+id/iconView" />
+
     <TextView
         android:id="@+id/title"
         android:layout_width="fill_parent"

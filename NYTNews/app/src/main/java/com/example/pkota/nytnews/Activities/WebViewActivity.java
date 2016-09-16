@@ -1,5 +1,8 @@
 package com.example.pkota.nytnews.Activities;
 
+/**
+ * Created by pkota on 14-09-2016.
+ */
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

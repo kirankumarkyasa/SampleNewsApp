@@ -1,16 +1,18 @@
 package com.example.pkota.nytnews.Activities;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.pkota.nytnews.R;
 import com.example.pkota.nytnews.utils.News;
@@ -27,27 +29,25 @@ public class CustomList  extends RecyclerView.Adapter<CustomList.MyViewHolder> i
 
     private static List<News> dataSet;
     Context context;
+ //   public ImageLoader imageLoader;
+   //  Animation
+    Animation animFadeIn, animFadeOut;
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewName;
         TextView textViewVersion;
         ImageView imageViewIcon;
+       CardView cardView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.textViewName = (TextView) itemView.findViewById(R.id.title);
             this.textViewVersion = (TextView) itemView.findViewById(R.id.count);
             this.imageViewIcon = (ImageView) itemView.findViewById(R.id.thumbnail);
+           this.cardView = (CardView) itemView.findViewById(R.id.card_view);
         }
 
-       /* @Override
-        public void onClick(View v) {
-            int pos = getAdapterPosition();
-            Toast.makeText(v.getContext(), "fef", Toast.LENGTH_SHORT).show();
-            WebView webview = (WebView) v.findViewById(R.id.webview);
-            webview.loadUrl(dataSet.get(pos).getUrl());
-        }*/
     }
 
     public CustomList(List<News> data,Context context) {
@@ -64,6 +64,7 @@ public class CustomList  extends RecyclerView.Adapter<CustomList.MyViewHolder> i
         view.setOnClickListener(MainActivity.myOnClickListener);
 
         MyViewHolder myViewHolder = new MyViewHolder(view);
+
         return myViewHolder;
     }
 
@@ -73,6 +74,8 @@ public class CustomList  extends RecyclerView.Adapter<CustomList.MyViewHolder> i
         TextView textViewName = holder.textViewName;
         TextView textViewVersion = holder.textViewVersion;
         ImageView imageView = holder.imageViewIcon;
+       CardView cardView = holder.cardView;
+        Log.d("CustomLost","check");
         SimpleDateFormat currentDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         SimpleDateFormat desiredDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
         java.util.Date dDate = null;
@@ -81,6 +84,7 @@ public class CustomList  extends RecyclerView.Adapter<CustomList.MyViewHolder> i
         } catch (ParseException e) {
             e.printStackTrace();
         }
+     //   imageLoader = new ImageLoader(context);
         String strOutput = desiredDateFormat.format( dDate );
         textViewName.setText(dataSet.get(listPosition).getTitle());
         textViewVersion.setText(strOutput);
@@ -89,8 +93,14 @@ public class CustomList  extends RecyclerView.Adapter<CustomList.MyViewHolder> i
         {
             imageView.setImageResource(R.drawable.capture); //default image if empty
         } else{
-            Picasso.with(context).load(image).into(imageView);
+           // imageLoader.DisplayImage(image, imageView);
+           Picasso.with(context).load(image).into(imageView);
         }
+        animFadeOut = AnimationUtils.loadAnimation(context, R.anim.bounce);
+
+        // start fade out animation
+       cardView.startAnimation(animFadeOut);
+
     }
 
     @Override
@@ -132,6 +142,7 @@ public class CustomList  extends RecyclerView.Adapter<CustomList.MyViewHolder> i
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
     }
+
 }
 
 
