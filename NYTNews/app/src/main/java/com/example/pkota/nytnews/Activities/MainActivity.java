@@ -6,6 +6,7 @@ package com.example.pkota.nytnews.Activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -36,13 +37,15 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener {
 
     private RecyclerView.LayoutManager layoutManager;
-    private static RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     static View.OnClickListener myOnClickListener;
     private static final String TAG = "MainActivity";
    // MemoryCache memoryCache;
+    private CustomList mAdapter;
 
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
+    private ProgressDialog mProgressDialog;
 
 
     @Override
@@ -59,6 +62,25 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         drawerFragment.setUp(R.id.recycler_fragment, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
         verifyStoragePermissions(this);
+        initProgressDialog();
+        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mAdapter = new CustomList(getApplicationContext());
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(new CustomList(getApplicationContext()));
+
+        recyclerView.addOnItemTouchListener(
+                new CustomList(getApplicationContext(), new CustomList.OnItemClickListener() {
+                    @Override public void onItemClick(View view,List<News> news ,int position) {
+                        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+                        intent.putExtra("url", news.get(position).getUrl());
+                        startActivity(intent);
+                    }
+
+                })
+        );
+
         // display the first navigation drawer view on app launch
 
         displayView(0);
@@ -94,20 +116,17 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         }
     }
     public void setRecycler(Call<News> call) {
-        recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        recyclerView.setItemViewCacheSize(0);
-        recyclerView.setHasFixedSize(true);
-
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        recyclerView.setVisibility(View.GONE);
+        showProgressDialog();
         call.enqueue(new Callback<News>() {
-
             @Override
             public void onResponse(Call<News> call, Response<News> response) {
                 List<News> news = response.body().getResults();
-                recyclerView.setAdapter(new CustomList(news,getApplicationContext()));
+                dismissProgressDialog();
+                if(mAdapter != null) {
+                    mAdapter.setDataset(news);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -116,16 +135,7 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
             }
         });
 
-        recyclerView.addOnItemTouchListener(
-                new CustomList(getApplicationContext(), new CustomList.OnItemClickListener() {
-                    @Override public void onItemClick(View view,List<News> news ,int position) {
-                        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
-                        intent.putExtra("url", news.get(position).getUrl());
-                        startActivity(intent);
-                    }
 
-                })
-        );
     }
 
     @Override
@@ -171,5 +181,35 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         // set the toolbar title
         getSupportActionBar().setTitle(title);
 
+    }
+
+    private void initProgressDialog() {
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage(getString(R.string.please_wait));
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+    }
+
+
+    public void showProgressDialog() {
+
+        try {
+            if (mProgressDialog == null)
+                initProgressDialog();
+            if (!mProgressDialog.isShowing())
+                mProgressDialog.show();
+        }
+        catch (Exception e) { }
+    }
+    public void dismissProgressDialog() {
+        try {
+            if (mProgressDialog != null && mProgressDialog.isShowing())
+                mProgressDialog.dismiss();
+        } catch (Exception e) {
+
+        } finally {
+            this.mProgressDialog = null;
+        }
     }
 }

@@ -25,5 +25,6 @@
     <string name="title_business">Business</string>
     <string name="title_sports">Sports</string>
     <string name="title_home">Home</string>
+    <string name="please_wait">please wait</string>
 
 </resources>

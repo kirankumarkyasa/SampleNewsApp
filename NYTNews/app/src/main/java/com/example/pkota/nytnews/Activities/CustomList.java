@@ -27,10 +27,8 @@ import java.util.List;
  */
 public class CustomList  extends RecyclerView.Adapter<CustomList.MyViewHolder> implements RecyclerView.OnItemTouchListener {
 
-    private static List<News> dataSet;
+    private List<News> dataSet;
     Context context;
- //   public ImageLoader imageLoader;
-   //  Animation
     Animation animFadeIn, animFadeOut;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -50,9 +48,13 @@ public class CustomList  extends RecyclerView.Adapter<CustomList.MyViewHolder> i
 
     }
 
-    public CustomList(List<News> data,Context context) {
-        this.dataSet = data;
+    public CustomList(Context context) {
         this.context = context;
+    }
+
+    public void setDataset(List<News> data) {
+        this.dataSet = data;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -60,9 +62,7 @@ public class CustomList  extends RecyclerView.Adapter<CustomList.MyViewHolder> i
                                            int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cards_view, parent, false);
-
         view.setOnClickListener(MainActivity.myOnClickListener);
-
         MyViewHolder myViewHolder = new MyViewHolder(view);
 
         return myViewHolder;
@@ -89,24 +89,29 @@ public class CustomList  extends RecyclerView.Adapter<CustomList.MyViewHolder> i
         textViewName.setText(dataSet.get(listPosition).getTitle());
         textViewVersion.setText(strOutput);
         String image = dataSet.get(listPosition).getThumbnail();
-        if (image.isEmpty())
-        {
+        if (image.isEmpty()) {
             imageView.setImageResource(R.drawable.capture); //default image if empty
-        } else{
+        } else {
            // imageLoader.DisplayImage(image, imageView);
            Picasso.with(context).load(image).into(imageView);
         }
         animFadeOut = AnimationUtils.loadAnimation(context, R.anim.bounce);
-
         // start fade out animation
        cardView.startAnimation(animFadeOut);
-
     }
 
     @Override
     public int getItemCount() {
-        return dataSet.size();
+        if(dataSet != null) {
+            if(dataSet.size() <= 0) {
+                return 0;
+            }
+            return dataSet.size();
+        } else {
+            return 0;
+        }
     }
+
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
